@@ -114,6 +114,4 @@ MySQL Workbench User Guide
 
 Kaggle SQL Queries Reference (educational use)
 
-StackOverflow discussions on MySQL Window Functions
-
 AUCA Database Development Course Notes
