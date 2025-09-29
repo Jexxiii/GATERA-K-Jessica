@@ -16,10 +16,15 @@ Identify top-selling products by region and quarter, track sales growth, and seg
 
 Top 5 products per region/quarter → RANK()
 
+<img width="982" height="313" alt="Screenshot 2025-09-27 182509" src="https://github.com/user-attachments/assets/f67ff7fa-f3a3-4e10-8d42-7059f6e9f8f3" />
 
 Running monthly sales totals → SUM() OVER()
 
+<img width="822" height="281" alt="Screenshot 2025-09-29 194125" src="https://github.com/user-attachments/assets/90ac1749-2020-4d42-8dde-701a93a81b6b" />
+
 Month-over-month growth % → LAG()/LEAD()
+
+<img width="1118" height="279" alt="Screenshot 2025-09-29 194341" src="https://github.com/user-attachments/assets/2a342757-fa13-42c5-8d66-bdf2c9aa31cd" />
 
 Customer quartiles (segments) → NTILE(4)
 
@@ -34,6 +39,8 @@ customers: customer_id (PK), name, region
 products: product_id (PK), name, category
 
 transactions: transaction_id (PK), customer_id (FK), product_id (FK), sale_date, amount
+
+<img width="553" height="303" alt="Screenshot 2025-09-29 194920" src="https://github.com/user-attachments/assets/d2463891-648a-42fb-82f8-5bc75ca7febd" />
 
 ER Diagram:
 
