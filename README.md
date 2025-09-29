@@ -43,6 +43,28 @@ transactions: transaction_id (PK), customer_id (FK), product_id (FK), sale_date,
 <img width="553" height="303" alt="Screenshot 2025-09-29 194920" src="https://github.com/user-attachments/assets/d2463891-648a-42fb-82f8-5bc75ca7febd" />
 
 ER Diagram:
+erDiagram
+    CUSTOMERS {
+        INT customer_id PK
+        VARCHAR name
+        VARCHAR region
+    }
+    PRODUCTS {
+        INT product_id PK
+        VARCHAR name
+        VARCHAR category
+    }
+    TRANSACTIONS {
+        INT transaction_id PK
+        INT customer_id FK
+        INT product_id FK
+        DATE sale_date
+        DECIMAL amount
+    }
+
+    CUSTOMERS ||--o{ TRANSACTIONS : "makes"
+    PRODUCTS  ||--o{ TRANSACTIONS : "contains"
+
 
 customers (1) ────< transactions >──── (1) products
 
@@ -153,6 +175,3 @@ Kaggle SQL Queries Reference (educational use)
 StackOverflow discussions on MySQL Window Functions
 
 AUCA Database Development Course Notes
-
-📌 Integrity Statement:
-All sources were properly cited. Implementations and analysis represent original work. No AI-generated content was copied without attribution or adaptation.
