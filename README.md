@@ -43,103 +43,45 @@ transactions: transaction_id (PK), customer_id (FK), product_id (FK), sale_date,
 <img width="553" height="303" alt="Screenshot 2025-09-29 194920" src="https://github.com/user-attachments/assets/d2463891-648a-42fb-82f8-5bc75ca7febd" />
 
 ER Diagram:
-erDiagram
-    CUSTOMERS {
-        INT customer_id PK
-        VARCHAR name
-        VARCHAR region
-    }
-    PRODUCTS {
-        INT product_id PK
-        VARCHAR name
-        VARCHAR category
-    }
-    TRANSACTIONS {
-        INT transaction_id PK
-        INT customer_id FK
-        INT product_id FK
-        DATE sale_date
-        DECIMAL amount
-    }
 
-    CUSTOMERS ||--o{ TRANSACTIONS : "makes"
-    PRODUCTS  ||--o{ TRANSACTIONS : "contains"
-
+<img width="806" height="376" alt="Screenshot 2025-09-29 201559" src="https://github.com/user-attachments/assets/7ba33f6e-c99f-49f3-950b-2639bbfaa00f" />
 
 customers (1) ────< transactions >──── (1) products
 
 4. Window Functions Implementation
 (a) Ranking – Top Products per Region
-SELECT 
-    c.region,
-    p.name AS product,
-    SUM(t.amount) AS total_sales,
-    RANK() OVER (PARTITION BY c.region ORDER BY SUM(t.amount) DESC) AS rank_in_region
-FROM transactions t
-JOIN customers c ON t.customer_id = c.customer_id
-JOIN products p ON t.product_id = p.product_id
-GROUP BY c.region, p.name;
+
+
+<img width="971" height="363" alt="Screenshot 2025-09-29 201807" src="https://github.com/user-attachments/assets/4bc8ed91-9ef9-4875-9ece-cbb059dd8fac" />
 
 
 📊 Insight: Shows which products dominate sales in each region.
 
 (b) Aggregate – Running Monthly Totals
-SELECT 
-    DATE_FORMAT(t.sale_date, '%Y-%m') AS month,
-    SUM(t.amount) AS monthly_sales,
-    SUM(SUM(t.amount)) OVER (ORDER BY DATE_FORMAT(t.sale_date, '%Y-%m')) AS running_total
-FROM transactions t
-GROUP BY DATE_FORMAT(t.sale_date, '%Y-%m');
+
+<img width="800" height="283" alt="Screenshot 2025-09-29 201905" src="https://github.com/user-attachments/assets/eb52d097-c0a5-419c-bd0f-6fb3958c9770" />
 
 
 📊 Insight: Helps track how revenue accumulates over time.
 
 (c) Navigation – Month-over-Month Growth
 WITH monthly_sales AS (
-  SELECT 
-      DATE_FORMAT(t.sale_date, '%Y-%m') AS month,
-      SUM(t.amount) AS total_sales
-  FROM transactions t
-  GROUP BY DATE_FORMAT(t.sale_date, '%Y-%m')
-)
-SELECT 
-    month,
-    total_sales,
-    LAG(total_sales) OVER (ORDER BY month) AS prev_month_sales,
-    ROUND(((total_sales - LAG(total_sales) OVER (ORDER BY month)) / 
-           LAG(total_sales) OVER (ORDER BY month)) * 100, 2) AS growth_percent
-FROM monthly_sales;
+ 
+ <img width="1077" height="294" alt="Screenshot 2025-09-29 202137" src="https://github.com/user-attachments/assets/9d912214-f898-40cc-ae92-2a47a0d4c952" />
 
 
 📊 Insight: Identifies whether sales are growing or declining month-to-month.
 
 (d) Distribution – Customer Quartiles
-SELECT 
-    c.customer_id,
-    c.name,
-    SUM(t.amount) AS total_spent,
-    NTILE(4) OVER (ORDER BY SUM(t.amount) DESC) AS spending_quartile
-FROM transactions t
-JOIN customers c ON t.customer_id = c.customer_id
-GROUP BY c.customer_id, c.name;
+
+<img width="568" height="141" alt="image" src="https://github.com/user-attachments/assets/a5af5c28-5601-4cae-bfd8-d443dd88284e" />
 
 
 📊 Insight: Customers are grouped into 4 segments — top spenders (Q1) down to least active (Q4).
 
 (e) Moving Average – 3-Month Trend
-WITH monthly_sales AS (
-  SELECT 
-      DATE_FORMAT(t.sale_date, '%Y-%m') AS month,
-      SUM(t.amount) AS total_sales
-  FROM transactions t
-  GROUP BY DATE_FORMAT(t.sale_date, '%Y-%m')
-)
-SELECT 
-    month,
-    total_sales,
-    ROUND(AVG(total_sales) OVER (ORDER BY month ROWS BETWEEN 2 PRECEDING AND CURRENT ROW), 2) AS three_month_avg
-FROM monthly_sales;
 
+<img width="754" height="256" alt="Screenshot 2025-09-29 202616" src="https://github.com/user-attachments/assets/816fbd2c-b05f-4281-afca-e982bab39ccd" />
 
 📊 Insight: Smooths fluctuations and shows long-term sales trends.
 
